@@ -1,51 +1,53 @@
-//Programa: Display LCD 16x2
-//Autor: MakerHero
- 
+
 //Carrega a biblioteca LiquidCrystal
 #include <LiquidCrystal.h>
- 
+const int pinoLed = 7;
 //Define os pinos que serão utilizados para ligação ao display
-LiquidCrystal lcd(13, 11, 5, 4, 6, 2);
-const int pinoLed = 12; //PINO DIGITAL UTILIZADO PELO LED
-const int pinoSensor = 3; //PINO DIGITAL UTILIZADO PELO SENSOR
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
  
 void setup()
 {
+  pinMode(pinoLed, OUTPUT); //DEFINE O PINO COMO SAÍDA
+  digitalWrite(pinoLed, HIGH); //LED INICIA DESLIGADO
   //Define o número de colunas e linhas do LCD
   lcd.begin(16, 2);
-  pinMode(pinoSensor, INPUT); //DEFINE O PINO COMO ENTRADA
-  pinMode(pinoLed, OUTPUT); //DEFINE O PINO COMO SAÍDA
-  digitalWrite(pinoLed, LOW); //LED INICIA DESLIGADO
+  //Serial.begin(9600);
 }
  
 void loop()
 {
-  if(digitalRead(pinoSensor) == LOW){ //SE A LEITURA DO PINO FOR IGUAL A LOW, FAZ
-      digitalWrite(pinoLed, HIGH); //ACENDE O LED
+  float sensorVoltage; 
+  float sensorValue;
+  sensorValue = analogRead(A0);
+  sensorVoltage = sensorValue/1024*5.0;
+  if(sensorVoltage >= 0.3){ //SE A LEITURA DO PINO FOR IGUAL A LOW, FAZ
+      digitalWrite(pinoLed, LOW); //ACENDE O LED
   }else{ //SENÃO, FAZ
-    digitalWrite(pinoLed, LOW); //APAGA O LED
+    digitalWrite(pinoLed, HIGH); //APAGA O LED
   }
   //Limpa a tela
   lcd.clear();
   //Posiciona o cursor na coluna 3, linha 0;
-  lcd.setCursor(3, 0);
+  lcd.setCursor(2, 0);
   //Envia o texto entre aspas para o LCD
-  lcd.print("Vencemos a fetin!!!");
-  lcd.setCursor(3, 1);
-  lcd.print(" LCD 16x2");
+  lcd.print("Vencemos a FETIN");
+  lcd.setCursor(2, 1);
+  lcd.print("Tensao sensor:");
+  lcd.print(sensorVoltage);
   delay(5000);
     
   //Rolagem para a esquerda
-  for (int posicao = 0; posicao < 20; posicao++)
+  for (int posicao = 0; posicao < 2; posicao++)
   {
     lcd.scrollDisplayLeft();
-    delay(1000);
+    delay(600);
   }
     
   //Rolagem para a direita
-  //for (int posicao = 0; posicao < 6; posicao++)
-  //{
-    //lcd.scrollDisplayRight();
-    //delay(1000);
-  //}
+  for (int posicao = 0; posicao < 2; posicao++)
+  {
+    lcd.scrollDisplayRight();
+    delay(600);
+  }
+ 
 }
